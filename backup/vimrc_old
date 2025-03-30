@@ -390,4 +390,4 @@ autocmd VimEnter * NERDTree
 let NERDTreeMapOpenInTab='\r'
 " autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
 set number
-
+vimrccdcdcd
