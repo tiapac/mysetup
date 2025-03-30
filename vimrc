@@ -387,5 +387,6 @@ function! VisualSelection(direction, extra_filter) range
 endfunction
 hi Normal ctermbg=NONE guibg=NONE
 autocmd VimEnter * NERDTree
-let NERDTreeMapOpenInTab='\r'>
-
+let NERDTreeMapOpenInTab='\r'
+" autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
+set number
