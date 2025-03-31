@@ -391,3 +391,4 @@ let NERDTreeMapOpenInTab='\r'
 " autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
 set number
 
+nnoremap ZS :w<cr>
