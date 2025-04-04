@@ -1,4 +1,4 @@
-# ~/.bashmarks_secure.sh
+#!/bin/bash
 
 # File to store bookmarks
 SDIRS="${SDIRS:-$HOME/.sdirs}"
