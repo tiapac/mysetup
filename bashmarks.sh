@@ -105,12 +105,11 @@ d() {
 l() {
     check_help "$1"
     source "$SDIRS"
-    env | sort | awk '/^DIR_.+/ {
+    env | sort | awk -v yellow="$YELLOW" -v nc="$NC" '/^DIR_.+/ {
         split(substr($0,5), parts, "=");
-        printf "%s%-20s%s %s\n", "'"$YELLOW"'", parts[1], "'"$NC"'", parts[2]
+        printf "%s%-20s%s %s\n", yellow, parts[1], nc, parts[2]
     }'
 }
-
 
 # Bash tab-completion
 _comp() {
