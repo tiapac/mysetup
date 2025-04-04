@@ -58,10 +58,11 @@ l() {
     check_help "$1"
     source "$SDIRS"
     env | sort | awk '/^DIR_.+/ {
-        split(substr($0,5), parts, "=")
-        printf "'$YELLOW'%-20s'$NC' %s\n", parts[1], parts[2]
+        split(substr($0,5), parts, "=");
+        printf "%s%-20s%s %s\n", "'"$YELLOW"'", parts[1], "'"$NC"'", parts[2]
     }'
 }
+
 
 # Helper: validate bookmark name
 _bookmark_name_valid() {
