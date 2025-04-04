@@ -15,7 +15,7 @@ BASHMARKS_INSTALL_DIR="$HOME/.local/bin"
 
 COMMAND=$1
 
-# Ensure that BACKUP_DIR exists, or die if it cannot be created.
+# Ensure that BACKUP_DIR exists or exit if it cannot be created.
 create_directory() {
     local dir="$1"
     if ! mkdir -p "$dir"; then
@@ -23,20 +23,24 @@ create_directory() {
     fi
 }
 
-# Backup a file if it exists; otherwise, record that it was absent.
-# Arguments:
-#   $1: source file
-#   $2: backup destination file (or a note file if absent)
+# Backup a file if it exists; otherwise, create a note file.
+# If a backup already exists, prompt before overwriting.
 backup_or_note() {
     local src="$1"
     local backup="$2"
     if [ -f "$src" ]; then
-        echo "Backing up $src to $backup"
-        cp "$src" "$backup" || die "Backup of $src to $backup failed"
+        if [ -f "$backup" ]; then
+            echo "Backup file '$backup' already exists."
+            read -r -p "Overwrite the existing backup? [y/n] " confirm
+            if [[ ! "$confirm" =~ ^[yY] ]]; then
+                die "User declined to overwrite backup $backup."
+            fi
+        fi
+        echo "Backing up $src to $backup."
+        cp "$src" "$backup" || die "Backup of $src to $backup failed."
     else
-        echo "No $src found, noting..."
-        # Touch a file so that we know the file did not exist originally.
-        touch "$backup" || die "Cannot create note file $backup"
+        echo "No $src found; creating a note file at $backup."
+        touch "$backup" || die "Cannot create note file $backup."
     fi
 }
 
@@ -54,7 +58,7 @@ setup_bashmarks() {
         backup_or_note "$BASHRC" "$BACKUP_DIR/bashrc_old"
         echo "source $BASHMARKS_INSTALL_DIR/bashmarks.sh" >> "$BASHRC"
     else
-        echo "bashmarks already sourced in .bashrc"
+        echo "bashmarks already sourced in .bashrc."
     fi
 }
 
@@ -65,7 +69,7 @@ setup_vim() {
     # Backup .vimrc or note that it was absent.
     backup_or_note "$VIMRC" "$BACKUP_DIR/vimrc_old"
 
-    # Create plugin directory
+    # Create plugin directory.
     create_directory "$HOME/.vim/pack/vendor/start"
 
     init_submodules
@@ -75,10 +79,10 @@ setup_vim() {
         try cp -r nerdtree "$NERDTREE_DIR"
         touch "$BACKUP_DIR/nerdtree_installed"
     else
-        echo "NERDTree not found, skipping its installation."
+        echo "NERDTree not found; skipping its installation."
     fi
 
-    # Copy our vimrc to $VIMRC
+    # Copy our vimrc to $VIMRC.
     try cp "$MYVIMRC" "$VIMRC"
 }
 
@@ -104,7 +108,7 @@ restore() {
         echo "No bashrc backup found; nothing to restore for .bashrc."
     fi
 
-    # Remove NERDTree if it was installed by setup.
+    # Remove NERDTree if it was installed during setup.
     if [ -f "$BACKUP_DIR/nerdtree_installed" ]; then
         echo "Removing installed NERDTree..."
         rm -rf "$NERDTREE_DIR" || die "Failed to remove NERDTree"
@@ -115,12 +119,12 @@ restore() {
 print_help() {
     echo "Usage: $0 <command>"
     echo "Commands:"
-    echo "  setup      - Set up the Vim configuration and install NERDTree and bashmarks"
+    echo "  set      - Set up the Vim configuration and install NERDTree and bashmarks"
     echo "  restore  - Restore previous Vim and bash configuration"
 }
 
 case "$COMMAND" in
-    setup)
+    set)
         setup
         echo "Setup complete!"
         ;;
