@@ -13,7 +13,7 @@ BACKUP_DIR="$(dirname "$0")/setup_backup"
 NERDTREE_DIR="$HOME/.vim/pack/vendor/start/nerdtree"
 BASHMARKS_INSTALL_DIR="$HOME/.local/bin"
 
-MYSHELL='"[\t - \$(date +%d.%m.%Y)]\[$(tput setaf 7)\][\#] \[$(tput bold)\]\[$(tput setaf 4)\]\[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 5)\]\h:\[$(tput setaf 3)\]\w\[$(tput setaf 4)\]\[$(tput setaf 2)\]\\$\[$(tput sgr0)\]"'
+MYSHELL='"[\t - \$(date +%d.%m.%Y)]\[$(tput setaf 7)\][\#] \[$(tput bold)\]\[$(tput setaf 4)\]\[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 5)\]\h:\[$(tput setaf 3)\]\w\[$(tput setaf 4)\]\[$(tput setaf 2)\]\\$\[$(tput sgr0)\] "'
 
 
 
