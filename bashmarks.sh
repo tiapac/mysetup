@@ -9,6 +9,19 @@ RED="\033[0;31m"
 YELLOW="\033[0;33m"
 NC="\033[0m" # No color
 
+
+# Print help
+check_help() {
+    if [[ "$1" =~ ^(-h|--help|-help)$ ]]; then
+        echo ""
+        echo "s <bookmark_name> - Saves the current directory as <bookmark_name>"
+        echo "g <bookmark_name> - Goes to the directory associated with <bookmark_name>"
+        echo "p <bookmark_name> - Prints the directory associated with <bookmark_name>"
+        echo "d <bookmark_name> - Deletes the bookmark"
+        echo "l                 - Lists all bookmarks"
+        kill -SIGINT $$
+    fi
+}
 # Save current directory to a bookmark
 s() {
     check_help "$1"
@@ -98,18 +111,6 @@ _purge_line() {
     fi
 }
 
-# Print help
-check_help() {
-    if [[ "$1" =~ ^(-h|--help|-help)$ ]]; then
-        echo ""
-        echo "s <bookmark_name> - Saves the current directory as <bookmark_name>"
-        echo "g <bookmark_name> - Goes to the directory associated with <bookmark_name>"
-        echo "p <bookmark_name> - Prints the directory associated with <bookmark_name>"
-        echo "d <bookmark_name> - Deletes the bookmark"
-        echo "l                 - Lists all bookmarks"
-        kill -SIGINT $$
-    fi
-}
 
 # Bash tab-completion
 _comp() {
