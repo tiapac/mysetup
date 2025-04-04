@@ -102,7 +102,7 @@ d() {
 }
 
 # List bookmarks
-l() {
+lbs() {
     check_help "$1"
     source "$SDIRS"
     env | sort | awk -v yellow="$YELLOW" -v nc="$NC" '/^DIR_.+/ {
