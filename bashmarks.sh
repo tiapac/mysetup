@@ -22,6 +22,41 @@ check_help() {
         kill -SIGINT $$
     fi
 }
+# Helper: validate bookmark name
+_bookmark_name_valid() {
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "ERROR: Bookmark name required"
+        return 1
+    elif [[ ! "$name" =~ ^[A-Za-z0-9_]+$ ]]; then
+        echo "ERROR: Invalid bookmark name. Use only letters, numbers, and underscores."
+        return 1
+    fi
+    return 0
+}
+
+# List raw bookmark names
+_l() {
+    source "$SDIRS"
+    env | grep "^DIR_" | cut -c5- | sort | cut -f1 -d "="
+}
+
+# Helper: remove matching line from file
+_purge_line() {
+    local file="$1"
+    local pattern="$2"
+    if [[ -s "$file" ]]; then
+        local tmp
+        tmp="$(mktemp -t bashmarks.XXXXXX)" || exit 1
+        trap "command rm -f -- '$tmp'" EXIT
+
+        grep -v "$pattern" "$file" > "$tmp"
+        command mv "$tmp" "$file"
+        trap - EXIT
+    fi
+}
+
+
 # Save current directory to a bookmark
 s() {
     check_help "$1"
@@ -74,41 +109,6 @@ l() {
         split(substr($0,5), parts, "=");
         printf "%s%-20s%s %s\n", "'"$YELLOW"'", parts[1], "'"$NC"'", parts[2]
     }'
-}
-
-
-# Helper: validate bookmark name
-_bookmark_name_valid() {
-    local name="$1"
-    if [[ -z "$name" ]]; then
-        echo "ERROR: Bookmark name required"
-        return 1
-    elif [[ ! "$name" =~ ^[A-Za-z0-9_]+$ ]]; then
-        echo "ERROR: Invalid bookmark name. Use only letters, numbers, and underscores."
-        return 1
-    fi
-    return 0
-}
-
-# List raw bookmark names
-_l() {
-    source "$SDIRS"
-    env | grep "^DIR_" | cut -c5- | sort | cut -f1 -d "="
-}
-
-# Helper: remove matching line from file
-_purge_line() {
-    local file="$1"
-    local pattern="$2"
-    if [[ -s "$file" ]]; then
-        local tmp
-        tmp="$(mktemp -t bashmarks.XXXXXX)" || exit 1
-        trap "command rm -f -- '$tmp'" EXIT
-
-        grep -v "$pattern" "$file" > "$tmp"
-        command mv "$tmp" "$file"
-        trap - EXIT
-    fi
 }
 
 
