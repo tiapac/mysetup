@@ -13,7 +13,20 @@ BACKUP_DIR="$(dirname "$0")/setup_backup"
 NERDTREE_DIR="$HOME/.vim/pack/vendor/start/nerdtree"
 BASHMARKS_INSTALL_DIR="$HOME/.local/bin"
 
-MYSHELL='"[\t - \$(date +%d.%m.%Y)]\[$(tput setaf 7)\][\#] \[$(tput bold)\]\[$(tput setaf 4)\]\[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 5)\]\h:\[$(tput setaf 3)\]\w\[$(tput setaf 4)\]\[$(tput setaf 2)\]\\$\[$(tput sgr0)\] "'
+MYSHELL_FULL='"[\t - \$(date +%d.%m.%Y)]\[$(tput setaf 7)\][\#] \[$(tput bold)\]\[$(tput setaf 4)\]\[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 5)\]\h:\[$(tput setaf 3)\]\w\[$(tput setaf 4)\]\[$(tput setaf 2)\]\\$\[$(tput sgr0)\] "'
+MYSHELL_LIGHT='"\[$(tput bold)\]\[$(tput setaf 4)\]\[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 5)\]\h:\[$(tput setaf 3)\]\w\[$(tput setaf 4)\]\[$(tput setaf 2)\]\\$\[$(tput sgr0)\] "'
+
+# # Check if the script is run from the correct directory
+if [ -z "$2" ]; then
+    echo "No argument provided. Defaulting to full shell prompt."
+    MYSHELL="$MYSHELL_FULL"
+elif [ "$2" == "light" ]; then
+    echo "Light shell prompt selected."
+    MYSHELL="$MYSHELL_LIGHT"
+else
+    echo "Invalid argument. Defaulting to full shell prompt."
+    MYSHELL="$MYSHELL_FULL"
+fi
 
 
 
@@ -58,9 +71,8 @@ setup_bashmarks() {
     create_directory "$BASHMARKS_INSTALL_DIR"
     try cp bashmarks.sh "$BASHMARKS_INSTALL_DIR"
     try source $BASHRC
-    # Backup .bashrc before modifying it if not already backed up.
+    
     if ! grep -q "bashmarks.sh" "$BASHRC"; then
-        #backup_or_note "$BASHRC" "$BACKUP_DIR/bashrc_old"
         echo "source $BASHMARKS_INSTALL_DIR/bashmarks.sh" >> "$BASHRC"
     else
         echo "bashmarks already sourced in .bashrc."
@@ -70,7 +82,6 @@ setup_bashmarks() {
 setup_shell(){
     echo "Setting up a nice shell..."
     if ! grep -q "export PS1" "$BASHRC"; then
-        #backup_or_note "$BASHRC" "$BACKUP_DIR/bashrc_old"
         echo "export PS1=$MYSHELL" >> "$BASHRC"
     else
         echo "Shell is already set in  .bashrc."
@@ -113,7 +124,7 @@ setup() {
     setup_shell
     setup_vim
     setup_bashmarks
-    source $HOME/.bashrc
+    # source $HOME/.bashrc
 }
 
 restore() {
@@ -152,13 +163,11 @@ print_help() {
 case "$COMMAND" in
     setup)
         setup
-        source $BASHRC
         echo "Setup complete!" 
         ;;
         
     restore)
         restore
-        source $BASHRC
         echo "Restored successfully!"
         ;;
     *)
